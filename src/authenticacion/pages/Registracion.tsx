@@ -1,32 +1,26 @@
 import { FaEnvelope, FaLock, FaBeer  } from "react-icons/fa";
 import logo from '../../assets/logo.png';
-import { useForm, SubmitHandler } from "react-hook-form";
-import {registerRequest} from '../api/auth.js';
-
-type User = {
-  name: string,
-  email: string
-  password: string
-}
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { useAuthContext } from "../context/AuthContext";
+import type { UserAuth } from "../model/user-auth";
 
 function Registracion() {
    const {
       register,
       handleSubmit,
       formState: { errors },
-    } = useForm<User>()
-  
-    const onSubmit: SubmitHandler<User> = async(data) => {
-      await registerRequest(data)
-        .then((response: { usuario: User }) => {        
-          console.log("esta es la data que voy a logear");
-          console.log(response);
-          // Redirigir a la página de inicio de sesion
-          // window.location.href = "/login";
-        })
-        .catch((error: {message: string}) => {
-          console.error("Error al iniciar sesión:", error);        
-        });
+    } = useForm<UserAuth>()
+    const {signup, isRegister} = useAuthContext();
+
+    const onSubmit: SubmitHandler<UserAuth> = async(data) => {
+       await signup(data);
+       console.log("Esta registrado? - ", isRegister);
+
+       if(isRegister)
+        window.location.href = '/login';
+      else  
+        console.log("Falló la registración");
     }
 
   return (
@@ -49,8 +43,9 @@ function Registracion() {
               type="text"
               placeholder="usuario"
               className="w-full bg-zinc-500 text-white py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400"
-               {...register("name", { required: true })}
+               {...register("username", { required: true })}
             />
+            {errors.username && <span className="text-red-400">Debe poner su username</span>}
           </div>
 
           {/* Email */}
@@ -61,7 +56,8 @@ function Registracion() {
               placeholder="usuario@gmail.com"
               className="w-full bg-zinc-500 text-white py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400"
               {...register("email", { required: true })}
-            />
+            />            
+            {errors.email && <span className="text-red-400">Debe poner su email</span>}
           </div>
 
           {/* Password */}
@@ -73,11 +69,8 @@ function Registracion() {
               className="w-full bg-zinc-500 text-white py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400"
               {...register("password", { required: true })}
             />
+            {errors.password && <span className="text-red-400">Debe poner su password</span>}
           </div>
-          {/* errors will return when field validation fails  */}
-          {errors.name && <span>Debe poner su username</span>}
-          {errors.email && <span>Debe poner su email</span>}
-          {errors.password && <span>Debe poner su password</span>}
 
           {/* Botón de Login */}
           <button

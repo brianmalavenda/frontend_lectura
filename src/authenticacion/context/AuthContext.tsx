@@ -1,94 +1,80 @@
-import { createContext, useContext, useState, useEffect} from 'react';
+import { createContext, useContext, useState} from 'react';
 import type { ReactNode } from 'react';
-import tareasProgramadas from '../../data/tareasProgramadas.json';
-import { getLecturaFromUser } from '../api/lectura';
-import { registerRequest, loginRequest, verifyTokenRequest } from '../api/auth';
-import Cookies from 'js-cookie';
+import { registerRequest, loginRequest } from '../api/auth';
 import type { UserAuth } from "../model/user-auth";
 
-export const AuthContext = createContext<UserAuth>({
-  username: "",
-  email: "",
-  token: "",
-  setLectura: () => {},
-});
+// Necesito crear una interface para tipar el contexto
+interface AuthContextType {
+  user: UserAuth | null;
+  signup: (user: UserAuth) => Promise<any>;
+  signin: (user: UserAuth) => Promise<any>;
+  isAuthenticated: boolean;
+  isRegister: boolean;
+  errors: string[];
+  loading: boolean;
+}
 
-export const useAuth = () => {
-  const context = useContext<UserAuth>(AuthContext);
-  
-  if (!context) throw new Error("useAuth must be used within a AuthProvider");
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth debe ser usado sin AuthProvider");
   return context;
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserAuth | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [errors, setErrors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isRegister, setIsRegister] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // clear errors after 5 seconds
-//   useEffect(() => {
-//     if (errors.length > 0) {
-//       const timer = setTimeout(() => {
-//         setErrors([]);
-//       }, 5000);
-//       return () => clearTimeout(timer);
-//     }
-//   }, [errors]);
-
-  const signup = async (user:UserAuth) => {
+  const signup = async (user: UserAuth) => {
+    setLoading(true);
     try {
       const res = await registerRequest(user);
-      if (res.status === 200) {
-        setUser(res.data);
-        setIsAuthenticated(true);
+
+      if (res.status === 201) {
+        setIsRegister(true)
+        return res.data;
       }
-    } catch (error: {response: { data: { message: string }}}) {
-      console.log(error.response.data);
-      setErrors(error.response.data.message);
+    } catch (error: any) {
+      console.error("Error al registrarse:", error);
+      setErrors([error.response?.data?.message || "Error desconocido"]);
+    } finally {
+      setLoading(false);
     }
   };
 
   const signin = async (user: UserAuth) => {
+    // await loginRequest(data)
+    //   .then((response: { data: { token: string } }) => {        
+    //     // Guardar el token en el localStorage        
+    //     localStorage.setItem("token", response.data.token);
+    //     // Redirigir a la página de inicio
+    //     window.location.href = "/";
+    //   })
+    //   .catch((error: {message: string}) => {
+    //     console.error("Error al iniciar sesión:", error);
+    //   // Manejar el error de inicio de sesión   
+    //   });
+
+    // console.log("esta es la data que voy a logear");
+    // console.log(data);
+
+    setLoading(true);
     try {
       const res = await loginRequest(user);
-      setUser(res.data);
+      setUser(res.data.user);
       setIsAuthenticated(true);
-    } catch (error) {
-      console.log(error);
-      // setErrors(error.response.data.message);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al iniciar sesión:", error);
+      setErrors([error.response?.data?.message || "Error desconocido"]);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const logout = () => {
-    Cookies.remove("token");
-    setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await verifyTokenRequest(cookies.token);
-        console.log(res);
-        if (!res.data) return setIsAuthenticated(false);
-        setIsAuthenticated(true);
-        setUser(res.data);
-        setLoading(false);
-      } catch (error) {
-        setIsAuthenticated(false);
-        setLoading(false);
-      }
-    };
-    checkLogin();
-  }, []);
 
   return (
     <AuthContext.Provider
@@ -96,8 +82,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         signup,
         signin,
-        logout,
         isAuthenticated,
+        isRegister,
         errors,
         loading,
       }}
