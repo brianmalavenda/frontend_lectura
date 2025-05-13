@@ -1,7 +1,7 @@
 export type UserAuth = {
   username: string
   email: string
-  token: string
+  password: string
 }
 
 // type UserContextType = {

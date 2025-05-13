@@ -1,35 +1,19 @@
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import logo from '../../assets/logo.png';
-import {loginRequest} from '../api/auth.js';
-
-type User = {
-  email: string
-  password: string
-}
+import {useAuthContext} from '../context/AuthContext.js'
+import type { UserAuth } from "../model/user-auth";
 
 function Login() {
    const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>()
+  } = useForm<UserAuth>()
 
-  const onSubmit: SubmitHandler<User> = async(data) => {
-    await loginRequest(data)
-      .then((response: { data: { token: string } }) => {        
-        // Guardar el token en el localStorage        
-        localStorage.setItem("token", response.data.token);
-        // Redirigir a la página de inicio
-        window.location.href = "/";
-      })
-      .catch((error: {message: string}) => {
-        console.error("Error al iniciar sesión:", error);
-      // Manejar el error de inicio de sesión   
-      });
-
-    console.log("esta es la data que voy a logear");
-    console.log(data);
+  const onSubmit: SubmitHandler<UserAuth> = async(data) => {
+    await useAuthContext().signin(data);
   }
 
   return (
