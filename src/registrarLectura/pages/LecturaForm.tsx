@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
-import ClarinIcon from '../assets/clarin-icon.svg?react';
-import LaNacionIcon from '../assets/ln-icon.svg?react';
-import P12Icon from '../assets/p12-icon.svg?react';
+import ClarinIcon from '../../assets/clarin-icon.svg?react';
+import LaNacionIcon from '../../assets/ln-icon.svg?react';
+import P12Icon from '../../assets/p12-icon.svg?react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { LecturaContext } from './lecturaContexto';
+import { LecturaContext } from '../context/lecturaContexto';
 
 
 const opcionesDeLectura = [

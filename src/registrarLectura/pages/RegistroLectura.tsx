@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {LecturaForm} from './LecturaForm.tsx'
 import { useContext } from 'react';
-import { LecturaContext } from './lecturaContexto.tsx';
+import { LecturaContext } from '../context/lecturaContexto.tsx';
 
 // { dataset }: { dataset: Date[] }
 export function RegistroLectura() {
