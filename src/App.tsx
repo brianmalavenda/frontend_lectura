@@ -10,7 +10,7 @@ function App() {
   return (
     <AuthProvider>
       <LecturaProvider>
-      <div className="bg-zinc-800 h-screen text-white flex flex-col items-center justify-center">
+      <div className="bg-zinc-800 min-h-screen text-white flex flex-col items-center py-6">
           <div className="bg-gray-950 p-4 w-11/12 rounded-lg flex flex-col items-center">
             <BrowserRouter>
               <Routes>
