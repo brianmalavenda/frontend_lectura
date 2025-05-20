@@ -4,7 +4,7 @@ import LaNacionIcon from '../../assets/ln-icon.svg?react';
 import P12Icon from '../../assets/p12-icon.svg?react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { LecturaContext } from '../context/lecturaContexto';
+import {useLecturaContext} from '../context/LecturaContexto';
 
 
 const opcionesDeLectura = [
@@ -30,7 +30,7 @@ const opcionesDeLectura = [
 ];
 // { dataset }: { dataset: Date[] }
 export function LecturaForm() {
-  const { lectura, setLectura } = useContext(LecturaContext);
+  const { lectura, setLectura } = useLecturaContext();
   const [checkSeleccionados, setCheckSeleccionados] = useState<string[]>([]);
   const [dateSeleccionada, setDateSeleccionada] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
