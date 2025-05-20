@@ -31,7 +31,7 @@ export function RegistroLectura() {
   };
 
   return (
-    <div className="mt-30 rounded-lg ">
+    <div className="mt-5 rounded-lg float-start">
       <label className="block font-semibold text-center">Dias con lectura cargada</label>
       <DatePicker
         inline

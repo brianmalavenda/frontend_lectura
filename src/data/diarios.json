@@ -1,0 +1,34 @@
+[
+    {
+    "name":"EjesDelMundoEnLaPatria",
+    "sigla":"EJES"
+    },
+    {
+    "name":"LaNacion",
+    "sigla":"LN"
+    },
+    {
+    "name":"Clarin",
+    "sigla":"CL"
+    },
+    {
+    "name":"Pagina12",
+    "sigla":"P12"
+    },
+    {
+    "name":"Xinhua",
+    "sigla":"XH"
+    },
+    {
+    "name":"HispanTV",
+    "sigla":"HTV"
+    },
+    {
+    "name":"Telesur",
+    "sigla":"TS"
+    },
+    {
+    "name":"Cubadebate",
+    "sigla":"CD"
+    }
+]
