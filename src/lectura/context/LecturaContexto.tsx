@@ -24,7 +24,7 @@ export const useLecturaContext = () => {
 
 export const LecturaProvider = ({ children }: { children: ReactNode }) => {
   // Obtengo la lectura del usuario 
-  const [lectura, setLectura] = useState<string[]>(tareasProgramadas.diasConLectura);
+  const [lectura, setLectura] = useState<string[]>([]);
 
   // const getLectura = async(userId: string) => {
   //   const res = await getLecturaFromUser(userId);
