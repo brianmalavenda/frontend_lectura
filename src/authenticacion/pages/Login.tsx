@@ -2,24 +2,36 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import logo from '../../assets/logo.png';
-import {useAuthContext} from '../context/AuthContext.js'
+import { useAuthContext } from '../context/AuthContext.js'
 import type { UserAuth } from "../model/user-auth";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Login() {
-   const {
+  const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<UserAuth>()
 
-  const onSubmit: SubmitHandler<UserAuth> = async(data) => {
-    await useAuthContext().signin(data);
+  const { signin, user, isAuthenticated } = useAuthContext();
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<UserAuth> = async (data) => {
+    await signin(data);
   }
+
+  useEffect(() => {
+    console.log("Usuario logeado ", user);
+    if (isAuthenticated) {
+      navigate('/loadlanding');
+    }
+  }, [isAuthenticated, navigate])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-900 px-6">
       <div className="mb-3">
-        <img src={logo} alt="Logo" className="w-50 h-auto"/>
+        <img src={logo} alt="Logo" className="w-50 h-auto" />
       </div>
       <div className="w-full max-w-md bg-transparent text-white">
         {/* Logo y encabezado */}

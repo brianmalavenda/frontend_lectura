@@ -1,4 +1,6 @@
 import { FaEnvelope, FaLock, FaBeer  } from "react-icons/fa";
+import {useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -11,17 +13,22 @@ function Registracion() {
       handleSubmit,
       formState: { errors },
     } = useForm<UserAuth>()
-    const {signup, isRegister} = useAuthContext();
+    const { signup, user, isRegister, isAuthenticated } = useAuthContext(); 
+    const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<UserAuth> = async(data) => {
-       await signup(data);
-       console.log("Esta registrado? - ", isRegister);
-
-       if(isRegister)
-        window.location.href = '/login';
-      else  
-        console.log("Falló la registración");
+       const userRegister = await signup(data);
+       if(userRegister)
+        console.log(`Usuario ${userRegister} registrado`);
+      else
+        console.log("Falló la registración del usuario");
     }
+
+    useEffect(() => {    
+    if (isRegister && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isRegister, isAuthenticated, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-900 px-6">
