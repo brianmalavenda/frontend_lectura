@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClarinIcon from '../../assets/clarin-icon.svg?react';
 import LaNacionIcon from '../../assets/ln-icon.svg?react';
 import P12Icon from '../../assets/p12-icon.svg?react';
@@ -35,10 +35,17 @@ export function LecturaForm() {
   const [dateSeleccionada, setDateSeleccionada] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
 
-    let dataset: Date[] = [];
+  let dataset: Date[] = [];
   lectura.forEach((tarea: string) => {
     dataset.push(new Date(tarea));
   });
+
+  useEffect(()=>{
+    const nuevasFechas = lectura.map((tarea: string) => new Date(tarea));
+    dataset = nuevasFechas;
+
+    console.log("lectura en el useEffect de lectura:", dataset);
+  }, [lectura])
 
 
   const handleChangeChecks = (e: React.ChangeEvent<HTMLInputElement>) => {
