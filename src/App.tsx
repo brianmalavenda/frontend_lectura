@@ -5,23 +5,26 @@ import Registracion from './authenticacion/pages/Registracion.tsx'
 import LoadingLanding from './landing/pages/LoadingLanding.tsx';
 import {AuthProvider} from './authenticacion/context/AuthContext.tsx';
 import {LecturaProvider} from './lectura/context/LecturaContexto.tsx';
+import {ProtectedRoute} from './authenticacion/pages/routes.tsx'
+import './styles/customColors.css';
+import './styles/customFonts.css';
 
 function App() {
   return (
     <AuthProvider>
       <LecturaProvider>
-      <div className="bg-zinc-800 min-h-screen text-white flex flex-col items-center py-6">
-          <div className="bg-gray-950 p-4 w-11/12 rounded-lg flex flex-col items-center">
-            <BrowserRouter>
+        <BrowserRouter>
+        <div className="bg-mostaza min-h-screen text-white flex flex-col items-center py-3 font-open-sans">    
               <Routes>
+              <Route path="/login" element={<Login/>} />
+              <Route path="/registracion" element={<Registracion/>} />                
+              <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<RegistroLectura />} />
                 <Route path="/loadlanding" element={<LoadingLanding />} />
-                <Route path="/login" element={<Login/>} />
-                <Route path="/registracion" element={<Registracion/>} />                
+              </Route>
               </Routes>
-            </BrowserRouter>
-          </div>
         </div>
+        </BrowserRouter>
         </LecturaProvider>
     </AuthProvider>
   )

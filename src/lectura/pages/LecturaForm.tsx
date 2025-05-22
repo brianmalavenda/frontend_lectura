@@ -3,6 +3,7 @@ import ClarinIcon from '../../assets/clarin-icon.svg?react';
 import LaNacionIcon from '../../assets/ln-icon.svg?react';
 import P12Icon from '../../assets/p12-icon.svg?react';
 import HTVIcon from '../../assets/HTV.svg?react';
+import COHETEIcon from '../../assets/cohete-icon.svg?react';
 import XHIcon from '../../assets/xinhua.svg?react';
 import TSIcon from '../../assets/telesur.svg?react';
 import CDIcon from '../../assets/cubadebate.svg?react';
@@ -12,9 +13,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useLecturaContext } from '../context/LecturaContexto';
 import type { Diario } from '../model/diario';
 import { getDiarios } from '../api/diario';
-import { saveLecturaFromUser } from '../api/lectura';
 import {verifyTokenRequest} from '../../authenticacion/api/auth.ts';
-import type { UserAuth } from '../../authenticacion/model/user-auth.ts';
+import '../../styles/customColors.css';
+import '../../styles/customFonts.css';
+import 'react-datepicker/dist/react-datepicker.css'; // estilo base
+import '../../styles/customDatepicker.css';
 
 interface OpcionLecturaType {
   id: string,
@@ -57,6 +60,9 @@ export function LecturaForm() {
         break;
       case "EJES":
         result = EJESIcon
+        break;
+      case "COH":
+        result = COHETEIcon
         break;
       default:
         result = () => null;
@@ -148,23 +154,26 @@ export function LecturaForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-lg font-semibold text-center block my-2 text-white">
+      <h1 className="text-center block my-2 text-white bg-azul-titulo w-full">
         Cargar nueva lectura
       </h1>
 
-      {/* <div className="mb-4 p-2 border rounded-lg w-full"> */}
-      <label className="block text-gray-500 text-sm item-center justify-center font-semibold mb-2">
+      {/* Contenedor centrado */}
+      <div className="flex justify-center">
+        <div className="w-full max-w-md px-4">
+      <label className="flex justify-center font-open-sans mb-2 font-extralight">
         Fecha de lectura
       </label>
       {/* un div para blurear el fondo */}
       {showPicker && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"></div>
+        <div className="fixed inset-0 text-gray-600 backdrop-blur-sm z-40"></div>
       )}
-      <div className="relative z-50">
+
+      <div className="flex justify-center relative z-50">
         <DatePicker
           selected={dateSeleccionada}
           onChange={handleDateChange}
-          className="border border-gray-300 rounded px-2 py-1 my-2 w-full item-center justify-center"
+          className="flex justify-center rounded bg-gris-claro px-2 py-1 my-2 w-full focus:outline-none focus:ring-2 focus:ring-azul-medio placeholder:text-gray-400"
           maxDate={new Date()}
           filterDate={isDiaConTarea}
           placeholderText="Seleccione una fecha"
@@ -174,14 +183,16 @@ export function LecturaForm() {
       </div>
 
 
-      <ul className="grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {/* <ul className="grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3"> */}
+      <ul className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-6 justify-items-center mt-4">
+
         {diarios.map((opcion) => {
           // Extraer el componente de ícono específico para este ítem
           const Icon = opcion.IconComponent;
           const isChecked = checkSeleccionados.includes(opcion.value);
 
           return (
-            <li key={opcion.id} className="flex items-center">
+            <li key={opcion.id} className="flex justify-center">
               <input
                 type="checkbox"
                 id={opcion.id}
@@ -192,15 +203,14 @@ export function LecturaForm() {
               />
               <label
                 htmlFor={opcion.id}
-                className={`inline-flex items-center justify-between w-full p-4 md:p-5 text-gray-500 bg-white border-2 rounded-lg cursor-pointer
-                peer-checked:border-green-600 dark:peer-checked:border-green-500`}>
-                <div className="block text-center w-full">
+                className={`flex items-center justify-center w-12 h-12 rounded-full border-2 ${
+                  isChecked ? "bg-azul-medio border-azul-medio" : "bg-white border-gray-300"
+                } cursor-pointer peer-checked:border-azul-medio`}>
                   <Icon
-                    className="w-8 h-8 sm:w-10 sm:h-10 mb-2 inline-block text-gray-500"
+                    className="w-6 h-6 sm:w-8 sm:h-8"
                     fill="currentColor"
                     aria-hidden="true"
                   />
-                </div>
               </label>
             </li>
           );
@@ -210,10 +220,12 @@ export function LecturaForm() {
         <button
           type="submit"
 
-          className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold"
+          className="px-6 py-3 text-white bg-azul-oscuro hover:bg-azul-oscuro rounded-lg font-semibold"
         >
           Guardar
         </button>
+      </div>
+      </div>
       </div>
       {/* Opcional: Mostrar seleccionados para debug */}
       {/* <div className="mt-4 text-white">
@@ -222,4 +234,3 @@ export function LecturaForm() {
     </form>
   );
 }
-

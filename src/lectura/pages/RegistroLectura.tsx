@@ -4,6 +4,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {LecturaForm} from './LecturaForm.tsx'
 import { useLecturaContext } from '../context/LecturaContexto.tsx';
 import {verifyTokenRequest} from '../../authenticacion/api/auth.ts';
+import '../../styles/customFonts.css';
+import 'react-datepicker/dist/react-datepicker.css'; // estilo base
+import '../../styles/customDatepicker.css';
 
 export function RegistroLectura() {
     const { lectura, getLectura } = useLecturaContext();
@@ -31,17 +34,20 @@ export function RegistroLectura() {
   };
 
   return (
-    <div className="mt-5 rounded-lg float-start">
-      <label className="block font-semibold text-center">Dias con lectura cargada</label>
-      <DatePicker
-        inline
-        highlightDates={[
-            {
-            'text-white rounded-full bg-green-500': dataset
-            }
-        ]}
-        filterDate={isDiaConTarea}
-      />    
+    <div className='w-full'>
+      <label className="block text-center text-white bg-azul-titulo w-full">Dias con lectura cargada</label>
+      <div className="flex justify-center">
+        <DatePicker
+          inline
+          highlightDates={[
+              {
+              'text-white rounded-full bg-azul-medio': dataset
+              }
+          ]}
+          filterDate={isDiaConTarea}  
+          className='flex justify-center'
+        />    
+        </div>
       <LecturaForm/>
     </div>
   );

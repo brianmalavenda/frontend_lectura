@@ -1,0 +1,10 @@
+:root{
+    --open-sans:'Open Sans'
+}
+
+.font-open-sans{
+    font-family:var(--open-sans);
+    font-size: 18px;
+    color:darkblue;
+    font-weight: bold;
+}
