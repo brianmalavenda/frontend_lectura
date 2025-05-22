@@ -1,17 +1,19 @@
-import { createContext, useContext, useState} from 'react';
+import { createContext, useContext, useEffect, useState} from 'react';
 import type { ReactNode } from 'react';
-import { registerRequest, loginRequest } from '../api/auth';
+import { registerRequest, loginRequest, logoutRequest, verifyTokenRequest } from '../api/auth';
 import type { UserAuth } from "../model/user-auth";
+import Cookies from "js-cookie";
 
 // Necesito crear una interface para tipar el contexto
 interface AuthContextType {
   user: string | null;
   signup: (user: UserAuth) => Promise<any>;
   signin: (user: UserAuth) => Promise<any>;
+  sigOut: () => void;
   isAuthenticated: boolean;
   isRegister: boolean;
   errors: string[];
-  // loading: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -27,10 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const signup = async (userRegistracion: UserAuth) => {
-    // setLoading(true);
     try {
       const res = await registerRequest(userRegistracion);
       if (res.status === 201) {
@@ -42,13 +43,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error al registrarse:", error);
       setErrors([error.response?.data?.message || "Error desconocido"]);
     } 
-    // finally {
-    //   setLoading(false);
-    // }
   };
 
   const signin = async (userLogin: UserAuth) => {
-    // setLoading(true);
     try {
       const res = await loginRequest(userLogin);
       if(res.data.user)
@@ -61,10 +58,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error al iniciar sesión:", error);
       setErrors([error.response?.data?.message || "Error desconocido"]);
     } 
-    // finally {
-      // setLoading(false);
-    // }
   };
+
+    const sigOut = () => {
+      Cookies.remove("access-token");
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+
+    useEffect(() => {
+      const checkLogin = async () => {
+        const cookies = Cookies.get();
+        if (!cookies.token) {
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
+        }
+
+        try {
+          const res = await verifyTokenRequest();
+
+          if (!res.data) return setIsAuthenticated(false);
+          setIsAuthenticated(true);
+          setUser(res.data);
+          setLoading(false);
+        } catch (error) {
+          setIsAuthenticated(false);
+          setLoading(false);
+        }
+      };
+      checkLogin();
+    }, []);
 
   return (
     <AuthContext.Provider
@@ -72,10 +96,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         signup,
         signin,
+        sigOut,
         isAuthenticated,
         isRegister,
         errors,
-        // loading,
+        loading,
       }}
     >
       {children}
