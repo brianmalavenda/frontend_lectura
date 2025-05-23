@@ -1,4 +1,4 @@
-export type Diario = {
+export type DiarioDto = {
     id: string,
     name: string,
     sigla: string
