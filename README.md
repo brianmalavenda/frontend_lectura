@@ -52,3 +52,5 @@ export default tseslint.config({
   },
 })
 ```
+# crear iconos personalizados
+https://convertio.co/download/0c27a22b8ff32aaeda7f0b48850cee769ddbbc/
