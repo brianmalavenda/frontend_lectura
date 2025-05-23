@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import tareasProgramadas from '../data/tareasProgramadas.json';
+import tareasProgramadas from '../../data/tareasProgramadas.json';
+import { getLecturaFromUser } from '../api/lectura';
 
 type LecturaContextType = {
   lectura: string[];
@@ -14,7 +15,9 @@ export const LecturaContext = createContext<LecturaContextType>({
 });
 
 // 2. Crear el proveedor
-export const LecturaProvider = ({ children }: { children: ReactNode }) => {
+export const LecturaProvider = async({ children }: { children: ReactNode }) => {
+  // Obtengo la lectura del usuario 
+  await getLecturaFromUser("email");
   const [lectura, setLectura] = useState<string[]>(tareasProgramadas.diasConLectura);
 
   return (
