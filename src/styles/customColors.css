@@ -8,6 +8,10 @@
   --color-gris-claro: #B7B8C0;
 }
 
+.bg-beige {
+  background-color: var(--color-beige);
+}
+
 .bg-mostaza {
   background-color: var(--color-mostaza);
 }
@@ -28,7 +32,7 @@
     border-color: var(--color-azul-medio)
 }
 
-.border-azul-medio {
+.border-azul-oscuro {
     border-color: var(--color-azul-oscuro)
 }
 

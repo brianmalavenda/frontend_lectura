@@ -2,9 +2,23 @@
     --open-sans:'Open Sans'
 }
 
-.font-open-sans{
+.font-open-sans-large{
     font-family:var(--open-sans);
     font-size: 18px;
+    color:darkblue;
+    font-weight: bold;
+}
+
+.font-open-sans-medium{
+    font-family:var(--open-sans);
+    font-size: 14px;
+    color:darkblue;
+    font-weight: bold;
+}
+
+.font-open-sans-litle{
+    font-family:var(--open-sans);
+    font-size: 10px;
     color:darkblue;
     font-weight: bold;
 }

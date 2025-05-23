@@ -11,8 +11,10 @@ import EJESIcon from '../../assets/ejes.svg?react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useLecturaContext } from '../context/LecturaContexto';
-import type { Diario } from '../model/diario';
+import type { DiarioDto } from '../model/diarioDto.ts';
+import type { LecturaDto } from '../model/lecturaDto.ts';
 import { getDiarios } from '../api/diario';
+import { guardarLecturaDeUsuario } from '../api/lectura.ts';
 import {verifyTokenRequest} from '../../authenticacion/api/auth.ts';
 import '../../styles/customColors.css';
 import '../../styles/customFonts.css';
@@ -71,7 +73,7 @@ export function LecturaForm() {
     return result;
   }
 
-  let diariosFromBD: Diario[] = [];
+  let diariosFromBD: DiarioDto[] = [];
   let dataset: Date[] = [];
   let userAuthorized:any = null
 
@@ -124,19 +126,35 @@ export function LecturaForm() {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const idsSeleccionados = diarios
-      .filter(d => checkSeleccionados.includes(d.value))
-      .map(d => d.id);
+    const guardarLecturayActualizarEstado = async() => {
+      e.preventDefault();
+      const idsSeleccionados = diarios
+        .filter(d => checkSeleccionados.includes(d.value))
+        .map(d => d.id);
+        
+      setLectura((prevLectura) => {
+        const nuevaLectura = [...prevLectura, dateSeleccionada.toISOString()];
+        return nuevaLectura;
+      });
 
-    console.log(idsSeleccionados);
-      
-    setLectura((prevLectura) => {
-      const nuevaLectura = [...prevLectura, dateSeleccionada.toISOString()];
-      return nuevaLectura;
-    });
+      try {
+        await Promise.all(
+          idsSeleccionados.map(async (id) => {
+            const lecturaObject: LecturaDto = {
+              diario_id: id,
+              fecha: dateSeleccionada
+            };
+            console.log("lecturaObject -- diario_id", lecturaObject.diario_id, "  - fecha: ", lecturaObject.fecha);
 
-    // saveLecturaFromUser(idsSeleccionados)
+            await guardarLecturaDeUsuario(lecturaObject);
+          })
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    guardarLecturayActualizarEstado();
   };
 
   const handleDateChange = (date: Date | null) => {
@@ -161,7 +179,7 @@ export function LecturaForm() {
       {/* Contenedor centrado */}
       <div className="flex justify-center">
         <div className="w-full max-w-md px-4">
-      <label className="flex justify-center font-open-sans mb-2 font-extralight">
+      <label className="flex justify-center font-open-sans-medium mb-2 font-extralight">
         Fecha de lectura
       </label>
       {/* un div para blurear el fondo */}
