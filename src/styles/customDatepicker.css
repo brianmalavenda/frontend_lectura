@@ -1,0 +1,37 @@
+/* Aplica a todo el calendario */
+.react-datepicker {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f5f5f4; /* fondo general */
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+/* Encabezado del mes */
+.react-datepicker__header {
+  background-color: #d69e2e; /* mostaza */
+  color: #1a2b6d;
+  font-weight: bold;
+  border-bottom: none;
+}
+
+/* Día seleccionado */
+.react-datepicker__day--selected {
+  background-color: #4a90e2; /* azul medio */
+  color: white;
+}
+
+/* Hover */
+.react-datepicker__day:hover {
+  background-color: #eae6d9; /* beige claro */
+  color: #1a2b6d;
+}
+
+/* Día de hoy */
+.react-datepicker__day--today {
+  border: 1px solid #d69e2e;
+}
+
+/* Bordes de navegación (flechas) */
+.react-datepicker__navigation {
+  top: 10px;
+}

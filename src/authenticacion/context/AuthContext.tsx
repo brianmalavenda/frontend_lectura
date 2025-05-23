@@ -1,13 +1,15 @@
-import { createContext, useContext, useState} from 'react';
+import { createContext, useContext, useEffect, useState} from 'react';
 import type { ReactNode } from 'react';
-import { registerRequest, loginRequest } from '../api/auth';
+import { registerRequest, loginRequest, logoutRequest, verifyTokenRequest } from '../api/auth';
 import type { UserAuth } from "../model/user-auth";
+import Cookies from "js-cookie";
 
 // Necesito crear una interface para tipar el contexto
 interface AuthContextType {
-  user: UserAuth | null;
+  user: string | null;
   signup: (user: UserAuth) => Promise<any>;
   signin: (user: UserAuth) => Promise<any>;
+  sigOut: () => void;
   isAuthenticated: boolean;
   isRegister: boolean;
   errors: string[];
@@ -23,58 +25,70 @@ export const useAuthContext = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserAuth | null>(null);
+  const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const signup = async (user: UserAuth) => {
-    setLoading(true);
+  const signup = async (userRegistracion: UserAuth) => {
     try {
-      const res = await registerRequest(user);
-
+      const res = await registerRequest(userRegistracion);
       if (res.status === 201) {
-        setIsRegister(true)
-        return res.data;
+        setIsRegister(true);
+        setUser(res.data.user); //yo esto lo llamo en el useEffect de Registracion y el usuario esta en esa pagina
+        return res.data.user.username;
       }
     } catch (error: any) {
       console.error("Error al registrarse:", error);
       setErrors([error.response?.data?.message || "Error desconocido"]);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  const signin = async (user: UserAuth) => {
-    // await loginRequest(data)
-    //   .then((response: { data: { token: string } }) => {        
-    //     // Guardar el token en el localStorage        
-    //     localStorage.setItem("token", response.data.token);
-    //     // Redirigir a la página de inicio
-    //     window.location.href = "/";
-    //   })
-    //   .catch((error: {message: string}) => {
-    //     console.error("Error al iniciar sesión:", error);
-    //   // Manejar el error de inicio de sesión   
-    //   });
-
-    // console.log("esta es la data que voy a logear");
-    // console.log(data);
-
-    setLoading(true);
+  const signin = async (userLogin: UserAuth) => {
     try {
-      const res = await loginRequest(user);
-      setUser(res.data.user);
-      setIsAuthenticated(true);
-      return res.data;
+      const res = await loginRequest(userLogin);
+      if(res.data.user)
+      {
+        setIsAuthenticated(true);
+        setUser(res.data.user);
+        return res.data.user;
+      }
     } catch (error: any) {
       console.error("Error al iniciar sesión:", error);
       setErrors([error.response?.data?.message || "Error desconocido"]);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
+
+    const sigOut = () => {
+      Cookies.remove("access-token");
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+
+    useEffect(() => {
+      const checkLogin = async () => {
+        const cookies = Cookies.get();
+        if (!cookies.token) {
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
+        }
+
+        try {
+          const res = await verifyTokenRequest();
+
+          if (!res.data) return setIsAuthenticated(false);
+          setIsAuthenticated(true);
+          setUser(res.data);
+          setLoading(false);
+        } catch (error) {
+          setIsAuthenticated(false);
+          setLoading(false);
+        }
+      };
+      checkLogin();
+    }, []);
 
   return (
     <AuthContext.Provider
@@ -82,6 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         signup,
         signin,
+        sigOut,
         isAuthenticated,
         isRegister,
         errors,

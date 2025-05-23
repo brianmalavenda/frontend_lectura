@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import 'react-datepicker/dist/react-datepicker.css';
+
+body{
+    @apply font-sans;
+}
