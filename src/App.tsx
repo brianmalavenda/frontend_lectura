@@ -1,7 +1,7 @@
-import {RegistroLectura} from './registrarLectura/RegistroLectura.tsx'
+import {RegistroLectura} from './registrarLectura/pages/RegistroLectura.tsx'
 import { BrowserRouter, Routes, Route  } from 'react-router-dom';
-import Login from './authenticacion/Login.tsx'
-import Registracion from './authenticacion/Registracion.tsx'
+import Login from './authenticacion/pages/Login.tsx'
+import Registracion from './authenticacion/pages/Registracion.tsx'
 
 function App() {
   return (

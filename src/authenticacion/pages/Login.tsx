@@ -1,8 +1,42 @@
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { useForm, SubmitHandler } from "react-hook-form";
+import logo from '../../assets/logo.png';
+import {loginRequest} from '../api/auth.js';
+
+type User = {
+  email: string
+  password: string
+}
 
 function Login() {
+   const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>()
+
+  const onSubmit: SubmitHandler<User> = async(data) => {
+    await loginRequest(data)
+      .then((response: { data: { token: string } }) => {        
+        // Guardar el token en el localStorage        
+        localStorage.setItem("token", response.data.token);
+        // Redirigir a la página de inicio
+        window.location.href = "/";
+      })
+      .catch((error: {message: string}) => {
+        console.error("Error al iniciar sesión:", error);
+      // Manejar el error de inicio de sesión   
+      });
+
+    console.log("esta es la data que voy a logear");
+    console.log(data);
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-900 px-6">
+      <div className="mb-3">
+        <img src={logo} alt="Logo" className="w-50 h-auto"/>
+      </div>
       <div className="w-full max-w-md bg-transparent text-white">
         {/* Logo y encabezado */}
         <div className="text-center mb-10">
@@ -10,15 +44,15 @@ function Login() {
         </div>
 
         {/* Formulario */}
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {/* Email */}
           <div className="relative">
             <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
             <input
               type="email"
-              name="email"
               placeholder="williamjames@gmail.com"
               className="w-full bg-zinc-500 text-white py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400"
+              {...register("email", { required: true })}
             />
           </div>
 
@@ -27,11 +61,14 @@ function Login() {
             <FaLock className="absolute left-3 top-3 text-gray-400" />
             <input
               type="password"
-              name="password"
               placeholder="••••••••"
               className="w-full bg-zinc-500 text-white py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400"
+              {...register("password", { required: true })}
             />
           </div>
+          {/* errors will return when field validation fails  */}
+          {errors.email && <span>Debe poner su email</span>}
+          {errors.password && <span>Debe poner su password</span>}
 
           {/* Botón de Login */}
           <button
