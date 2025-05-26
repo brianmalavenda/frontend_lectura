@@ -2,6 +2,7 @@ import {RegistroLectura} from './lectura/pages/RegistroLectura.tsx'
 import { BrowserRouter, Routes, Route  } from 'react-router-dom';
 import Login from './authenticacion/pages/Login.tsx'
 import Registracion from './authenticacion/pages/Registracion.tsx'
+import Logout from './authenticacion/pages/Logout.tsx'
 import LoadingLanding from './landing/pages/LoadingLanding.tsx';
 import {AuthProvider} from './authenticacion/context/AuthContext.tsx';
 import {LecturaProvider} from './lectura/context/LecturaContexto.tsx';
@@ -23,6 +24,7 @@ function App() {
               <Route path="/registracion" element={<Registracion/>} />                
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<RegistroLectura />} />
+                <Route path="/logout" element={<Logout />} />
                 <Route path="/loadlanding" element={<LoadingLanding />} />
               </Route>
               </Routes>

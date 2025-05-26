@@ -25,15 +25,15 @@ const Navbar = () => {
         {isAuthenticated? 
             (
                 <div className="hidden md:flex space-x-6">
-                <a href="#inicio" className="text-gray-700 hover:text-blue-600">Home</a>
-                <a href="#servicios" className="text-gray-700 hover:text-blue-600">Logout</a>
-                <a href="#contacto" className="text-gray-700 hover:text-blue-600">Perfil</a>
+                <a href="/inicio" className="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="/logout" className="text-gray-700 hover:text-blue-600">Logout</a>
+                <a href="/perfil" className="text-gray-700 hover:text-blue-600">Perfil</a>
                 </div>
             ):
             (
                 <div className="hidden md:flex space-x-6">
-                <a href="#inicio" className="text-gray-700 hover:text-blue-600">Login</a>
-                <a href="#servicios" className="text-gray-700 hover:text-blue-600">Registracion</a>
+                <a href="/inicio" className="text-gray-700 hover:text-blue-600">Login</a>
+                <a href="/registracion" className="text-gray-700 hover:text-blue-600">Registracion</a>
                 </div>
             )
         }
@@ -46,15 +46,15 @@ const Navbar = () => {
             { isAuthenticated? 
             (
                 <>
-                <a href="#inicio" className="block text-gray-700 hover:text-blue-600">Home</a>
-                <a href="#servicios" className="block text-gray-700 hover:text-blue-600">Logout</a>
-                <a href="#contacto" className="block text-gray-700 hover:text-blue-600">Perfil</a>
+                <a href="/inicio" className="block text-gray-700 hover:text-blue-600">Home</a>
+                <a href="/logout" className="block text-gray-700 hover:text-blue-600">Logout</a>
+                <a href="/perfil" className="block text-gray-700 hover:text-blue-600">Perfil</a>
                 </>
             ):
             (
                 <>
-                <a href="#inicio" className="block text-gray-700 hover:text-blue-600">Login</a>
-                <a href="#servicios" className="block text-gray-700 hover:text-blue-600">Registracion</a>
+                <a href="/inicio" className="block text-gray-700 hover:text-blue-600">Login</a>
+                <a href="/registracion" className="block text-gray-700 hover:text-blue-600">Registracion</a>
                 </>
             )
             }
