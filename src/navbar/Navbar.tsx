@@ -27,12 +27,11 @@ const Navbar = () => {
                 <div className="hidden md:flex space-x-6">
                 <a href="/inicio" className="text-gray-700 hover:text-blue-600">Home</a>
                 <a href="/logout" className="text-gray-700 hover:text-blue-600">Logout</a>
-                <a href="/perfil" className="text-gray-700 hover:text-blue-600">Perfil</a>
                 </div>
             ):
             (
                 <div className="hidden md:flex space-x-6">
-                <a href="/inicio" className="text-gray-700 hover:text-blue-600">Login</a>
+                <a href="/login" className="text-gray-700 hover:text-blue-600">Login</a>
                 <a href="/registracion" className="text-gray-700 hover:text-blue-600">Registracion</a>
                 </div>
             )

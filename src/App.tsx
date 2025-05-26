@@ -23,7 +23,7 @@ function App() {
               <Route path="/login" element={<Login/>} />
               <Route path="/registracion" element={<Registracion/>} />                
               <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<RegistroLectura />} />
+                <Route path="/inicio" element={<RegistroLectura />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/loadlanding" element={<LoadingLanding />} />
               </Route>
