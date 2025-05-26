@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState} from 'react';
 import type { ReactNode } from 'react';
-import { registerRequest, loginRequest, logoutRequest, verifyTokenRequest } from '../api/auth';
+import { registerRequest, loginRequest, verifyTokenRequest } from '../api/auth';
 import type { UserAuth } from "../model/user-auth";
 import Cookies from "js-cookie";
 

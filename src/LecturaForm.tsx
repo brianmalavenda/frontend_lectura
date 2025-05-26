@@ -42,7 +42,7 @@ export function LecturaForm() {
     e.preventDefault();
     console.log('Seleccionados:', checkSeleccionados);
     console.log('Fecha seleccionada:', dateSeleccionada);
-    tareasProgramadas.push(dateSeleccionada);
+    // tareasProgramadas.push(dateSeleccionada);
   };
 
   const handleDateChange = (date: Date | null) => {

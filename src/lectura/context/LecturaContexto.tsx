@@ -1,6 +1,5 @@
 import { createContext, useState, useContext } from 'react';
 import type { ReactNode } from 'react';
-import tareasProgramadas from '../../data/tareasProgramadas.json';
 import { getLecturaFromUser } from '../api/lectura';
 
 interface LecturaContextType {

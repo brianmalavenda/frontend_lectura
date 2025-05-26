@@ -14,7 +14,7 @@ function Registracion() {
       handleSubmit,
       formState: { errors },
     } = useForm<UserAuth>()
-    const { signup, user, isRegister, isAuthenticated } = useAuthContext(); 
+    const { signup, isRegister, isAuthenticated } = useAuthContext(); 
     const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<UserAuth> = async(data) => {
